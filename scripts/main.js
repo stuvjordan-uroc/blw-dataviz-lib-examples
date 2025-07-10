@@ -316,4 +316,22 @@ if (!example2SVGId) {
       .attr("stroke", "gray")
       .attr("fill", "none")
   })
+  //let's put some circles in the rectanges!
+
+  example2SVGSelection.selectAll("circle")
+    .data(fakeData)
+    .join("circle")
+    .attr("cx", d => (
+      example2VSV.X(d[example2VSVConfig.groupKey]).xLeft + Math.random() * (example2VSVConfig.segmentWidth)
+    ))
+    .attr("cy", d => (
+      example2VSV.Y(d[example2VSVConfig.groupKey], d[example2VSVConfig.responseKey]).yTop +
+      Math.random() * (
+        example2VSV.Y(d[example2VSVConfig.groupKey], d[example2VSVConfig.responseKey]).yBottom -
+        example2VSV.Y(d[example2VSVConfig.groupKey], d[example2VSVConfig.responseKey]).yTop)
+    ))
+    .attr("r", 10)
+    .attr("stroke-width", 1)
+
 }
+
