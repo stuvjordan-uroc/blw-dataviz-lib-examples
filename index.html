@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Segment Examples</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script type="module" src="scripts/main.js"></script>
+</head>
+
+<body>
+  <section>
+    <h1>Example 1: Make A Resposive SVG with
+      <pre>newResposiveSVG</pre>
+    </h1>
+    <p>`styles.css` in this example sets three breakpoints on screensize: less than 800px wide, less than 1000px wide, greater than or equal to 1000px wide.  Further, it assigns the widths 300px, 799px, and 999px at these breakpoints (respectively) to all divs of class "svg-frame"</p>
+    <p>In `scripts/main.js`, we create an svg and insert it into the div below using `newResposiveSVG`.  That div has class "svg-frame".  Thus, when you resize the window, you will see the svg scale up and down as the window width crosses the three breakpoints.</p>
+    <div class="svg-frame" id="frame-example-1"></div>
+  </section>
+</body>
+
+</html>

@@ -1,0 +1,30 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+}
+
+.svg-frame {
+  width: 300px;
+  padding-left: 3rem;
+  padding-right: 2rem;
+}
+
+circle {
+  fill: yellow;
+  fill-opacity: 0.25;
+  stroke: darkgray;
+}
+
+@media screen and (800px <= width < 1000px) {
+  .svg-frame {
+    width: 799px;
+  }
+}
+
+@media screen and (1000px <= width) {
+  .svg-frame {
+    width: 999px;
+  }
+}
