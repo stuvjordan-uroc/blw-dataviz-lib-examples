@@ -1,48 +1,48 @@
-import { newResponsiveSVG } from "./blw-dataviz-lib.js"
+import { newResponsiveSVG, VerticalSegmentViz } from "./blw-dataviz-lib.js"
 
 
 //make the fake data we'll use in all the examples
 const fakeResponses = ["A", "B", "C", "D"]
 const fakeGroups = ["L", "M", "R"]
-const fakeYears = new Array(20).fill(1).map((el,idx) => 1971 + idx)
+const fakeYears = new Array(20).fill(1).map((el, idx) => 1971 + idx)
 const groupYearCutoffs = {
   L: (year) => ({
-    t1: 0.5 - 0.4*(year-1971)/20,
-    t2: 0.5 + 0.3*(year-1971)/20
+    t1: 0.5 - 0.4 * (year - 1971) / 20,
+    t2: 0.5 + 0.3 * (year - 1971) / 20
   }),
   M: (year) => ({
-    t1: 0.85 + 0.1*(year-1971)/20,
-    t2: 0.15 + 0.6*(year-1971)/20
+    t1: 0.85 + 0.1 * (year - 1971) / 20,
+    t2: 0.15 + 0.6 * (year - 1971) / 20
   }),
   R: (year) => ({
-    t1: 0.33 + 0.3*(year-1971)/20,
-    t2: 0.33 + 0.3*(year-1971)/20
+    t1: 0.33 + 0.3 * (year - 1971) / 20,
+    t2: 0.33 + 0.3 * (year - 1971) / 20
   })
 }
 let fakeData = new Array(1000).fill(1).map((el) => ({
-  group: fakeGroups[Math.floor(Math.random()*fakeGroups.length)],
-  year: fakeYears[Math.floor(Math.random()*fakeYears.length)]
+  group: fakeGroups[Math.floor(Math.random() * fakeGroups.length)],
+  year: fakeYears[Math.floor(Math.random() * fakeYears.length)]
 }))
-.map((el) => {
-  let response = ""
-  if (Math.random() < groupYearCutoffs[el["group"]](el.year).t1){
-    if (Math.random() < groupYearCutoffs[el["group"]](el.year).t2) {
-      response = fakeResponses[0]
-    }else {
-      response = fakeResponses[1]
+  .map((el) => {
+    let response = ""
+    if (Math.random() < groupYearCutoffs[el["group"]](el.year).t1) {
+      if (Math.random() < groupYearCutoffs[el["group"]](el.year).t2) {
+        response = fakeResponses[0]
+      } else {
+        response = fakeResponses[1]
+      }
+    } else {
+      if (Math.random() < groupYearCutoffs[el.group](el.year).t2) {
+        response = fakeResponses[2]
+      } else {
+        response = fakeResponses[3]
+      }
     }
-  }else {
-    if (Math.random() < groupYearCutoffs[el.group](el.year).t2) {
-      response = fakeResponses[2]
-    }else {
-      response = fakeResponses[3]
-    }
-  }
-  return({
-    ...el,
-    response: response
+    return ({
+      ...el,
+      response: response
+    })
   })
-})
 
 
 /*EXAMPLE 1: Make a Responsive SVG with newResponsiveSVG*/
@@ -83,28 +83,28 @@ if (!example1SVGId) {
   console.log("Something is wrong with example 1. newResponsiveSVG returned null.")
 } else {
   //Knowing that the returned id is not null, we can now start putting stuff in our SVG!
-  
+
   //use d3 to select the newly-attached svg...remembering to pre-pend the id string
   //in the selector! (d3 is loaded in a script tag in index.html just before this script,
   //so you can just use d3.)
   const example1SVGSelection = d3.select("#" + example1SVGId)
-  
+
   //now do the stuff you already know how to do.  For instance:
-  const example1Margin = {top: 10, right: 10, bottom: 10, left: 10}
+  const example1Margin = { top: 10, right: 10, bottom: 10, left: 10 }
   const example1XScale = d3.scaleLinear(
-    [0,1], 
-    [example1Margin.left, example1SVGConfig.maxXCoord - example1Margin.left ]
+    [0, 1],
+    [example1Margin.left, example1SVGConfig.maxXCoord - example1Margin.left]
   )
   const example1YScale = d3.scaleLinear(
-    [0,1],
-    [example1SVGConfig.maxYCoord-example1Margin.bottom, example1Margin.top]
+    [0, 1],
+    [example1SVGConfig.maxYCoord - example1Margin.bottom, example1Margin.top]
   )
   example1SVGSelection.selectAll("circle")
     .data(new Array(1000).fill(1))
     .join("circle")
-      .attr("cx", d => example1XScale(Math.random(0,1)))
-      .attr("cy", d => example1YScale(Math.random(0,1)))
-      .attr("r", "10")
+    .attr("cx", d => example1XScale(Math.random(0, 1)))
+    .attr("cy", d => example1YScale(Math.random(0, 1)))
+    .attr("r", "10")
 }
 
 /*EXAMPLE 2: Basic Vertical Segments with VerticalSegmentViz*/
@@ -121,11 +121,11 @@ We'll get into the details below, but first let's set up our svg
 */
 const example2SVGConfig = {
   maxXCoord: 1000,
-  maxYCoord: 1600,
-  containerId: "frame-example-1"
+  maxYCoord: 1200,
+  containerId: "frame-example-2"
 }
 const example2SVGId = newResponsiveSVG(example2SVGConfig)
-const example2SVGSelection = d3.select("#" + example2SVGId)
+
 
 /*
 OK, now let's start using VerticalSegmentViz.  When you call `new VerticalSegmentViz`
@@ -233,3 +233,87 @@ margin.right.
 one segment plot in your svg and nothing else, you probably want to use the maximum
 x Coordinate for this.  On the other hand, if you 
 */
+
+
+const someArray = new Array(10)
+
+const example2VSVConfig = {
+  data: fakeData,
+  groups: [["L", "M"], ["R"]],
+  responses: [["A"], ["B"], ["C"], ["D"]],
+  groupKey: "group",
+  responseKey: "response",
+  margin: { top: 50, left: 300, bottom: 50, right: 300 },
+  vizWidth: example2SVGConfig.maxXCoord,
+  vizHeight: example2SVGConfig.maxYCoord,
+  segmentWidth: 150,
+  segmentVerticalPadding: 20
+}
+const example2VSV = new VerticalSegmentViz(example2VSVConfig)
+
+/* this gives the right and left boundary of the column of segments for a given group */
+example2VSV.X("L")
+/* what's returned from the line above is an object like this:
+  {
+    xLeft: Some coordinate (a number),
+    xRight: Some coordinate (a number)
+  }
+
+*/
+
+/* this gives the top and bottom boundaries of the segment for a given group and response */
+example2VSV.Y("M", "B")
+/* what's returned from the line above is an object like this:
+  {
+    yTop: Some coordinate (a number),
+    yBottom: Some coordinate (a number)
+  }
+*/
+
+/* this gives the proprotions by group and response */
+example2VSV.P("M", "B")
+/*
+returns a number that is the proprtion in the group to which "L" belongs who gave response "B"
+*/
+
+if (!example2SVGId) {
+  console.log("Something is wrong with example 1. newResponsiveSVG returned null.")
+} else {
+  //Knowing that the returned id is not null, we can now start putting stuff in our SVG!
+
+  //use d3 to select the newly-attached svg...remembering to pre-pend the id string
+  //in the selector! (d3 is loaded in a script tag in index.html just before this script,
+  //so you can just use d3.)
+  const example2SVGSelection = d3.select("#" + example2SVGId)
+
+  //let's just outline the rectangles
+
+  example2SVGSelection.append("rect")
+    .attr("x", example2VSV.X("L").xLeft)
+    .attr("y", example2VSV.Y("L", "A").yTop)
+    .attr("width", example2VSV.X("L").xRight - example2VSV.X("L").xLeft)
+    .attr("height", example2VSV.Y("L", "A").yBottom - example2VSV.Y("L", "A").yTop)
+    .attr("stroke-width", "5")
+    .attr("stroke", "gray")
+    .attr("fill", "none")
+
+  Array("A", "B", "C", "D").forEach((response) => {
+    example2SVGSelection.append("rect")
+      .attr("x", example2VSV.X("L").xLeft)
+      .attr("y", example2VSV.Y("L", response).yTop)
+      .attr("width", example2VSV.X("L").xRight - example2VSV.X("L").xLeft)
+      .attr("height", example2VSV.Y("L", response).yBottom - example2VSV.Y("L", response).yTop)
+      .attr("stroke-width", "5")
+      .attr("stroke", "gray")
+      .attr("fill", "none")
+
+    example2SVGSelection.append("rect")
+      .attr("x", example2VSV.X("R").xLeft)
+      .attr("y", example2VSV.Y("R", response).yTop)
+      .attr("width", example2VSV.X("R").xRight - example2VSV.X("R").xLeft)
+      .attr("height", example2VSV.Y("R", response).yBottom - example2VSV.Y("R", response).yTop)
+      .attr("stroke-width", "5")
+      .attr("stroke", "gray")
+      .attr("fill", "none")
+  })
+}
