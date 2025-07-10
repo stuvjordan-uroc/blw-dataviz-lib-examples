@@ -107,3 +107,129 @@ if (!example1SVGId) {
       .attr("r", "10")
 }
 
+/*EXAMPLE 2: Basic Vertical Segments with VerticalSegmentViz*/
+
+
+/*
+First of all, VerticalSegmentViz is a class, so you have to call it like this:
+
+  new VerticalSegmentViz(...arguments go here...)
+
+It returns an instance of the class, which you use to determine coordinates.
+
+We'll get into the details below, but first let's set up our svg
+*/
+const example2SVGConfig = {
+  maxXCoord: 1000,
+  maxYCoord: 1600,
+  containerId: "frame-example-1"
+}
+const example2SVGId = newResponsiveSVG(example2SVGConfig)
+const example2SVGSelection = d3.select("#" + example2SVGId)
+
+/*
+OK, now let's start using VerticalSegmentViz.  When you call `new VerticalSegmentViz`
+you have to pass it an object.  The object you pass has a whole bunch of properties
+you must include.  It's a big list of properties, so hold on to your butt:
+
++ data:  This is the data you want to plot in your segments.
+It must be an array of objects, or bad things will happen.
+
++ groups: This is an array of arrays.  It specifies the groups for which you want to make
+segements.  For instance, if you do...
+
+  groups: [["Democrat"], ["Independent"], ["Republican"]]
+
+...your saying you want three columns of segments, one for the rows in the data
+that have "Democrat", one for the rows that have "Independent", one for the rows
+that have "Republican".
+
+What is it an array of arrays?  So you can do things like this:
+
+  groups: [["Democrat", "Independent"], ["Republican"]]
+
+This would make a plot with two columns of segments.  One column would show the
+distribution of responses among demorats and independents, the other among republicans.
+Pretty cool, yes?
+
+The columns are always going to be left-to-right in the order of the groups array.
+for instance [["Independent"],["Republican"]] would put independents on the left
+and republicans on the right, [["Republican"],["Independent"]] would do the opposite
+
+The groups must be mutually exclusive.  So...
+
+  groups[["Democrat", "Independent"],["Independent","Republican"]]
+
+...will fail.
+
++ responses:  This is an array of arrays that tells you what responses you want in
+each column, how those responses should be grouped and ordered.  Here's an example:
+
+  responses: [["Fully"], ["Mostly"], ["Partly"], ["Not at all"]]
+
+This will create 4 segments in each column, with the heights proportional to the
+proportion of the members of the groups in that column who gave the relevant response.
+Segments will be orderd top to bottom as they are listed left-to-right in the 
+responses array.  So in this example, the top segment for each group will represent the
+proportion of each group that responded "Fully".
+
+Just like with groups, we can make segments that combine multiple responses, like this:
+
+  responses: [["Fully","Mostly"],["Partly","Not at all"]]
+
+This would give us two segments in each column.  The top segment representing people who
+said "Fully" OR "Mostly", the bottom segment representing people who said "Partly" OR
+"Not at all".
+
+The response arrays have to be mutually exclusive.  So, for instance, this will throw
+an error
+
+  responses: [["Fully", "Mostly", "Partly"], ["Partly", "Not at all"]]
+
+The response arrays together have to include ALL the responses in the data.  So if you
+write...
+
+  responses: [["Fully"], ["Mostly"], ["Partly"], ["Not at all"]]
+
+...But the data you pass to the data propoerty has some rows that have "NaN" in
+the relevant column, an error will be thrown.
+
++ groupKey:  This is a string that gives the key used to access which group 
+each row belongs to in the data you passed to the data property.  For instance,
+if each object in your data array is like this...
+
+  {
+    bidenWinner: "some string",
+    pid3: "some string",
+    someOtherProp: "some string"
+  }
+
+and you want the columns to represent groups that are keyed by pid3, you would do:
+
+  groupKey: "pid3"
+
+
++ responseKey: This string gives the key used to access which response each row
+belongs to in the data you passed to the data property.  For instance, if your
+data looked like the above example, and you wanted the segment heights to represent
+responses to bidenWinner, you would do:
+
+  responseKey: "bidenWinner"
+
+
++ margin:  this is a standard margin object, such as
+
+  margin: {top: 10, right: 10, bottom: 10, left: 10}
+
+HOWEVER, you probably want to pass a DIFFERENT margin object than the one you're using
+for the svg as a whole.  VerticalSegmentViz will lay things out so that the left-most
+column of segments will sit with it's left side exactly at the 'left' property of
+margin you pass.  So you want a big enough left margin to accomodate labels, etc.
+
+Similarly, the right-most segment will sit with it's right side right up against
+margin.right.
+
++ vizWidth:  This is the total width of the vizualization.  If you're just putting
+one segment plot in your svg and nothing else, you probably want to use the maximum
+x Coordinate for this.  On the other hand, if you 
+*/

@@ -1,8 +1,18 @@
+:root {
+  font-size: 16pt;
+  font-weight: 400;
+}
+
+p {
+  max-width: 100rch;
+}
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
+  padding: 0 1rem 0 1rem;
 }
 
 .svg-frame {
@@ -18,12 +28,19 @@ circle {
 }
 
 @media screen and (800px <= width < 1000px) {
+
+  body {
+    padding: 0 4rem 0 4rem;
+  }
   .svg-frame {
     width: 799px;
   }
 }
 
 @media screen and (1000px <= width) {
+  body {
+    padding: 0 4rem 0 4rem;
+  }
   .svg-frame {
     width: 999px;
   }
